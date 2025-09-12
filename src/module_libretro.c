@@ -92,6 +92,36 @@ static int lua_set_square_pos(lua_State *L) {
     return 0;
 }
 
+
+// Lua function: lr.get_square2_pos()
+static int lua_get_square2_pos(lua_State *L) {
+    lua_pushinteger(L, square2_x);
+    lua_pushinteger(L, square2_y);
+    if (log_cb) {
+        log_cb(RETRO_LOG_INFO, "[LUA] get_square2_pos called: (%d, %d)\n", square2_x, square2_y);
+    }
+    return 2;
+}
+
+// Lua function: lr.set_square2_pos(x, y)
+static int lua_set_square2_pos(lua_State *L) {
+    if (lua_gettop(L) != 2) {
+        lua_pushstring(L, "set_square2_pos expects 2 arguments: x, y");
+        lua_error(L);
+        return 0;
+    }
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
+    if (x < 0 || x > WIDTH - 20) x = (x < 0) ? 0 : WIDTH - 20;
+    if (y < 0 || y > HEIGHT - 20) y = (y < 0) ? 0 : HEIGHT - 20;
+    square2_x = x;
+    square2_y = y;
+    // if (log_cb) {
+    //     log_cb(RETRO_LOG_INFO, "[LUA] set_square2_pos called: (%d, %d)\n", x, y);
+    // }
+    return 0;
+}
+
 // Lua function: lr.get_input(port, device, id)
 static int lua_get_input(lua_State *L) {
     if (lua_gettop(L) != 3) {
@@ -105,8 +135,8 @@ static int lua_get_input(lua_State *L) {
     int state = input_state_cb ? input_state_cb(port, device, 0, id) : 0;
     lua_pushboolean(L, state);
     // if (log_cb) {
-        // log_cb(RETRO_LOG_INFO, "[LUA] get_input called: port=%u, device=%u, id=%u, state=%d\n",
-        //        port, device, id, state);
+    //     log_cb(RETRO_LOG_INFO, "[LUA] get_input called: port=%u, device=%u, id=%u, state=%d\n",
+    //            port, device, id, state);
     // }
     return 1;
 }
@@ -186,6 +216,8 @@ static const struct luaL_Reg libretro_funcs[] = {
     {"draw_square", lua_draw_square},
     {"get_square_pos", lua_get_square_pos},
     {"set_square_pos", lua_set_square_pos},
+    {"get_square2_pos", lua_get_square2_pos},
+    {"set_square2_pos", lua_set_square2_pos},
     {"get_input", lua_get_input},
     {"get_key", lua_get_key},
     {"get_mouse", lua_get_mouse},
@@ -223,6 +255,30 @@ static void set_constants(lua_State *L) {
     lua_setfield(L, -2, "JOYPAD_LEFT");
     lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_RIGHT);
     lua_setfield(L, -2, "JOYPAD_RIGHT");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_X); // Square (□)
+    lua_setfield(L, -2, "JOYPAD_SQUARE");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_A); // Circle (○)
+    lua_setfield(L, -2, "JOYPAD_CIRCLE");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_B); // Cross (×)
+    lua_setfield(L, -2, "JOYPAD_CROSS");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_Y); // Triangle (△)
+    lua_setfield(L, -2, "JOYPAD_TRIANGLE");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_L); // L1
+    lua_setfield(L, -2, "JOYPAD_L1");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_R); // R1
+    lua_setfield(L, -2, "JOYPAD_R1");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_L2); // L2
+    lua_setfield(L, -2, "JOYPAD_L2");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_R2); // R2
+    lua_setfield(L, -2, "JOYPAD_R2");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_SELECT); // Select
+    lua_setfield(L, -2, "JOYPAD_SELECT");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_START); // Start
+    lua_setfield(L, -2, "JOYPAD_START");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_L3); // L3
+    lua_setfield(L, -2, "JOYPAD_L3");
+    lua_pushinteger(L, RETRO_DEVICE_ID_JOYPAD_R3); // R3
+    lua_setfield(L, -2, "JOYPAD_R3");
     lua_pushinteger(L, RETROK_w);
     lua_setfield(L, -2, "KEY_W");
     lua_pushinteger(L, RETROK_a);

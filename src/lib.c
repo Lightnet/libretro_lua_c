@@ -34,6 +34,8 @@ static int env_call_count = 0;
 static FILE *log_file = NULL;
 int square_x = 0;
 int square_y = 0;
+int square2_x = 0;
+int square2_y = 0;
 char *script_path = NULL;  // No static, for lib.h
 static lua_State *L = NULL;
 

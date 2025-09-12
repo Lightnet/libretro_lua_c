@@ -13,6 +13,8 @@ void draw_square(int x, int y, int width, int height, uint16_t color);
 extern retro_log_printf_t log_cb;
 extern int square_x;
 extern int square_y;
+extern int square2_x;
+extern int square2_y;
 extern retro_input_state_t input_state_cb;
 extern char *script_path;
 
