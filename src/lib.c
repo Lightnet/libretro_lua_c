@@ -116,6 +116,23 @@ void draw_string(int x, int y, const char *str, uint16_t color) {
    }
 }
 
+// draw square
+void draw_square(int x, int y, int width, int height, uint16_t color) {
+    // Bounds checking to prevent framebuffer overflow
+    if (x < 0 || y < 0 || x + width > WIDTH || y + height > HEIGHT || width <= 0 || height <= 0) {
+        if (log_cb)
+            log_cb(RETRO_LOG_WARN, "[LUA] Invalid square parameters: x=%d, y=%d, width=%d, height=%d\n", x, y, width, height);
+        return;
+    }
+    for (int j = 0; j < height; j++) {
+        for (int i = 0; i < width; i++) {
+            framebuffer[(y + j) * WIDTH + (x + i)] = color;
+        }
+    }
+    if (log_cb)
+        log_cb(RETRO_LOG_INFO, "[LUA] draw_square called: x=%d, y=%d, width=%d, height=%d, color=0x%04X\n", x, y, width, height, color);
+}
+
 // Called by the frontend to set environment callbacks
 void retro_set_environment(retro_environment_t cb) {
    environ_cb = cb;
@@ -369,6 +386,7 @@ void retro_deinit(void) {
    initialized = false;
    contentless_set = false;
    env_call_count = 0;
+
    square_x = 0;
    square_y = 0;
    if (log_cb)
@@ -421,9 +439,9 @@ void retro_set_controller_port_device(unsigned port, unsigned device) {
 
 // Called to reset the core
 void retro_reset(void) {
-    clear_framebuffer();
-    square_x = 0;
-    square_y = 0;
+   clear_framebuffer();
+   square_x = 0;
+   square_y = 0;
 
    // Reload the Lua script using dynamic path
    if (L && script_path) {
@@ -511,12 +529,14 @@ void retro_run(void) {
    // }
 
    // Draw a 20x20 red square at (square_x, square_y)
-   for (int y = 0; y < 20; y++) {
-      for (int x = 0; x < 20; x++) {
-         if (square_x + x < WIDTH && square_y + y < HEIGHT)
-            framebuffer[(y + square_y) * WIDTH + (x + square_x)] = COLOR_RED;
-      }
-   }
+   // for (int y = 0; y < 20; y++) {
+   //    for (int x = 0; x < 20; x++) {
+   //       if (square_x + x < WIDTH && square_y + y < HEIGHT)
+   //          framebuffer[(y + square_y) * WIDTH + (x + square_x)] = COLOR_RED;
+   //    }
+   // }
+
+
   //  if (log_cb)
   //     log_cb(RETRO_LOG_INFO, "[DEBUG] Drawing red square at (%d, %d)\n", square_x, square_y);
   //  else

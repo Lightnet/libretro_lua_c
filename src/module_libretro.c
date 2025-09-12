@@ -41,6 +41,26 @@ static int lua_draw_string(lua_State *L) {
     return 0;
 }
 
+// Lua function: lr.draw_square(x, y, width, height, color)
+static int lua_draw_square(lua_State *L) {
+    if (lua_gettop(L) != 5) {
+        lua_pushstring(L, "draw_square expects 5 arguments: x, y, width, height, color");
+        lua_error(L);
+        return 0;
+    }
+    int x = luaL_checkinteger(L, 1);
+    int y = luaL_checkinteger(L, 2);
+    int width = luaL_checkinteger(L, 3);
+    int height = luaL_checkinteger(L, 4);
+    uint16_t color = (uint16_t)luaL_checkinteger(L, 5);
+    draw_square(x, y, width, height, color);
+    if (log_cb) {
+        log_cb(RETRO_LOG_INFO, "[LUA] draw_square called: (%d, %d, %d, %d, 0x%04X)\n",
+               x, y, width, height, color);
+    }
+    return 0;
+}
+
 // Lua function: lr.get_square_pos()
 static int lua_get_square_pos(lua_State *L) {
     lua_pushinteger(L, square_x);
@@ -92,6 +112,7 @@ static int lua_get_input(lua_State *L) {
 // Table of functions to register
 static const struct luaL_Reg libretro_funcs[] = {
     {"draw_string", lua_draw_string},
+    {"draw_square", lua_draw_square},
     {"get_square_pos", lua_get_square_pos},
     {"set_square_pos", lua_set_square_pos},
     {"get_input", lua_get_input},
