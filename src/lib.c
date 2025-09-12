@@ -1,16 +1,23 @@
-
-
+// 
+// libretro core
+// opengl from libretro and retroarch.
+// setup api application
+// 
+// Lua
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
-
+// libretro
 #include <libretro.h>
+// helper
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
 #include <stdarg.h>
+// font
 #include "font.h"
+// module
 #include "module_libretro.h"
 #include "lib.h"
 
@@ -83,10 +90,10 @@ static void clear_framebuffer() {
 // Draw a single 8x8 character at (x, y) in RGB565 color
 static void draw_char(int x, int y, char c, uint16_t color) {
    if (c < 32 || c > 126) {
-      if (log_cb)
-         log_cb(RETRO_LOG_WARN, "[DEBUG] Invalid character: %c\n", c);
-      else
-         fallback_log_format("WARN", "Invalid character: %c\n", c);
+      // if (log_cb)
+      //    log_cb(RETRO_LOG_WARN, "[DEBUG] Invalid character: %c\n", c);
+      // else
+      //    fallback_log_format("WARN", "Invalid character: %c\n", c);
       return;
    }
    const uint8_t *glyph = font_8x8[c - 32];
@@ -118,19 +125,19 @@ void draw_string(int x, int y, const char *str, uint16_t color) {
 
 // draw square
 void draw_square(int x, int y, int width, int height, uint16_t color) {
-    // Bounds checking to prevent framebuffer overflow
-    if (x < 0 || y < 0 || x + width > WIDTH || y + height > HEIGHT || width <= 0 || height <= 0) {
-        if (log_cb)
-            log_cb(RETRO_LOG_WARN, "[LUA] Invalid square parameters: x=%d, y=%d, width=%d, height=%d\n", x, y, width, height);
-        return;
-    }
-    for (int j = 0; j < height; j++) {
-        for (int i = 0; i < width; i++) {
-            framebuffer[(y + j) * WIDTH + (x + i)] = color;
-        }
-    }
-    if (log_cb)
-        log_cb(RETRO_LOG_INFO, "[LUA] draw_square called: x=%d, y=%d, width=%d, height=%d, color=0x%04X\n", x, y, width, height, color);
+   // Bounds checking to prevent framebuffer overflow
+   if (x < 0 || y < 0 || x + width > WIDTH || y + height > HEIGHT || width <= 0 || height <= 0) {
+      // if (log_cb)
+      //    log_cb(RETRO_LOG_WARN, "[LUA] Invalid square parameters: x=%d, y=%d, width=%d, height=%d\n", x, y, width, height);
+      return;
+   }
+   for (int j = 0; j < height; j++) {
+      for (int i = 0; i < width; i++) {
+         framebuffer[(y + j) * WIDTH + (x + i)] = color;
+      }
+   }
+   // if (log_cb)
+   //    log_cb(RETRO_LOG_INFO, "[LUA] draw_square called: x=%d, y=%d, width=%d, height=%d, color=0x%04X\n", x, y, width, height, color);
 }
 
 // Called by the frontend to set environment callbacks
@@ -199,9 +206,9 @@ void retro_set_audio_sample_batch(retro_audio_sample_batch_t cb) { (void)cb; }
 void retro_init(void) {
    initialized = true;
    if (log_cb)
-      log_cb(RETRO_LOG_INFO, "[DEBUG] Hello World core initialized\n");
+      log_cb(RETRO_LOG_INFO, "[DEBUG] Libretro core initialized\n");
    else
-      fallback_log("DEBUG", "Hello World core initialized\n");
+      fallback_log("DEBUG", "Libretro core initialized\n");
    clear_framebuffer();
 
    // Initialize Lua
@@ -465,10 +472,10 @@ void retro_reset(void) {
          fallback_log("WARN", "No Lua state or script path for reload\n");
    }
 
-    if (log_cb)
-        log_cb(RETRO_LOG_INFO, "[DEBUG] Core reset\n");
-    else
-        fallback_log("DEBUG", "Core reset\n");
+   if (log_cb)
+      log_cb(RETRO_LOG_INFO, "[DEBUG] Core reset\n");
+   else
+      fallback_log("DEBUG", "Core reset\n");
 }
 
 // Called every frame
@@ -543,7 +550,7 @@ void retro_run(void) {
   //     fallback_log_format("DEBUG", "Drawing red square at (%d, %d)\n", square_x, square_y);
 
    // Draw "Hello World" at (50, 50)
-   draw_string(50, 50, "Hello World", COLOR_WHITE);
+   // draw_string(50, 50, "Hello World", COLOR_WHITE);
 
    if (video_cb) {
       video_cb(framebuffer, WIDTH, HEIGHT, WIDTH * sizeof(uint16_t));
