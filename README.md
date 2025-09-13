@@ -40,11 +40,13 @@
 - 
 
 # Information:
-  Sample test Libretro Core for lua 5.4 script to use opengl and inputs.
+  Sample test Libretro Core for lua 5.4 script to use framebuffer RGB565 render and inputs.
 
   Note this using library as libretro core for RetroArch Lancher. Like libretro_lua_c.dll or libretro_lua_c.so. It can be place in core folder to run it.
 
   By creating lua script to build libretro core api is idea. To able to debug faster. But there should be limited.
+  
+  It use image data render the viewport. In simple worlds it canvas drawing, picture, screen shots. Pixel will change of the limit color.
 
 # Example:
   The script has the simple draw text. As well input control for square move around to test.
